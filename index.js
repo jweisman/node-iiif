@@ -1,4 +1,4 @@
-const probe = require('probe-image-size');
+const sizeOf = require('image-size');
 const mime = require('mime-types');
 const transform = require('./lib/transform');
 const IIIFError = require('./lib/error');
@@ -40,8 +40,8 @@ class Processor {
 
   dimensions () {
     if (this.sizeInfo == null) {
-      this.sizeInfo = probe(this.streamResolver(this.id)).then(data => {
-        this.sizeInfo = data;
+      this.sizeInfo = this.streamResolver(this.id).once('data', (chunk) => {
+        this.sizeInfo = sizeOf(chunk);
         return this.sizeInfo;
       });
     }
