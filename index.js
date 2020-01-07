@@ -40,10 +40,12 @@ class Processor {
 
   dimensions () {
     if (this.sizeInfo == null) {
-      this.sizeInfo = this.streamResolver(this.id).once('data', (chunk) => {
-        this.sizeInfo = sizeOf(chunk);
-        return this.sizeInfo;
-      });
+      return new Promise((resolve, reject) => {
+        this.streamResolver(this.id).once('data', (chunk) => {
+          this.sizeInfo = sizeOf(chunk);
+          resolve(this.sizeInfo);
+        });
+      })
     }
     return this.sizeInfo;
   }
